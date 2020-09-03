@@ -32,6 +32,11 @@ variable "name" {
   default     = "Provisioned by Terraform"
 }
 
+variable "sn_request" {
+  description = "Request ID from ServiceNow"
+  default     = "NULL"
+}
+
 ## Requires
 terraform {
   required_version = "~> 0.13"
@@ -122,13 +127,22 @@ resource "aws_route_table_association" "a" {
 }
 
 resource "aws_instance" "web" {
+  # key_name                  = var.aws_key_pair
   ami                         = var.ami_id
   instance_type               = var.instance_type
   subnet_id                   = aws_subnet.public.id
   vpc_security_group_ids      = [aws_security_group.demo-sg.id]
   associate_public_ip_address = true
-  user_data                   = file("setup.sh")
-  # key_name                    = var.aws_key_pair
+
+  user_data = <<-EOT
+    #! /bin/bash
+    sudo apt-get update
+    sudo apt-get install apache2 --yes
+    sudo systemctl start apache2
+    sudo systemctl enable apache2
+    echo "<h1>Terraform Instance Launched Successfully from ServiceNow Request: ${var.sn_request}</h1>" | sudo tee /var/www/html/index.html
+  EOT
+
 
   tags = {
     Name = var.name

@@ -17,14 +17,10 @@ You should now be able to use the example cloud provider configurations
 
 ## Usage
 
-Each example cloud provider has it's own configuration.
-
-### AWS
-
 ```
-cd aws
 terraform init
 terraform plan
 
 terraform apply
 ```
+
