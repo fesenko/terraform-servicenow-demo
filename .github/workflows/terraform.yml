@@ -26,6 +26,9 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color
+# AWS_ACCESS_KEY_ID & AWS_SECRET_ACCESS_KEY must be set in Repo > Settings > Secrets 
+# for `terraform plan` to work
+#       - name: Terraform Plan
+#         id: plan
+#         run: terraform plan -no-color
+
